@@ -18,6 +18,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0  # Fetch all branches and history
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -59,15 +60,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git status
-          git branch -a
-          git checkout -b main origin/main
+          git checkout main
           git pull origin main
           git add ./pipeline-example/deployment/backend.yaml
           # Uncomment and correct the next line if needed
           git add ./pipeline-example/deployment/frontend.yaml
           git commit -m "Update backend and frontend image to ${{ github.sha }}" || echo "No changes to commit"
-          git status
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
           git push origin HEAD:main
         env:
