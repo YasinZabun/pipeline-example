@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  labels:
+    app: mongodb
+spec:
+  replicas: 1  # Adjust the number of replicas if needed
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo:latest  # You can specify a version, like 'mongo:4.4'
+          ports:
+            - containerPort: 27017  # Default MongoDB port
+          volumeMounts:
+            - name: mongodb-data
+              mountPath: /data/db  # MongoDB data directory
+      volumes:
+        - name: mongodb-data
+          persistentVolumeClaim:
+            claimName: mongodb-pvc  # PVC for persistent storage
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+spec:
+  selector:
+    app: mongodb
+  ports:
+    - port: 27017
+      targetPort: 27017
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce  # Ensure it's the right access mode for your use case
+  resources:
+    requests:
+      storage: 10Gi  # Adjust the size as per your requirements
+

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend-container
+        image: zabunhub/celsius-to-fahrenheit-backend:610a48bdcf3f9f5962ff7f48dd752c13002be0ae  # Replace with your actual image
+        ports:
+        - containerPort: 3000  # Adjust to your backend's listening port
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 3000  # Internal port for Kubernetes network
+      targetPort: 3000  # Container port
+  type: ClusterIP  # Use LoadBalancer or NodePort if you want to expose it externally
+
