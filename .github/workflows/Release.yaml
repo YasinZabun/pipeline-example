@@ -1,38 +1,65 @@
-name: Release yaml
+name: Release
 
 on:
   pull_request:
     branches:
       - main
-    
   workflow_dispatch:
 
 jobs:
   docker-release:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-            username: ${{ secrets.DOCKERHUB_USERNAME }}
-            password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push frontend
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Frontend
         uses: docker/build-push-action@v5
         with:
-            context: ./pipeline-example/frontend
-            push: true
-            tags: zabunhub/pipeline-example-frontend:${{ github.sha }}
-            file: ./pipeline-example/frontend/Dockerfile
-      - name: Build and push backend
+          context: ./pipeline-example/frontend
+          push: true
+          tags: zabunhub/pipeline-example-frontend:${{ github.sha }}
+          file: ./pipeline-example/frontend/Dockerfile
+
+      - name: Build and Push Backend
         uses: docker/build-push-action@v5
         with:
-            context: ./pipeline-example/backend
-            push: true
-            tags: zabunhub/pipeline-example-backend:${{ github.sha }}
-            file: ./pipeline-example/backend/Dockerfile
+          context: ./pipeline-example/backend
+          push: true
+          tags: zabunhub/pipeline-example-backend:${{ github.sha }}
+          file: ./pipeline-example/backend/Dockerfile
+
+      - name: Update Deployment YAML
+        run: |
+          pwd
+          sed -i "s|zabunhub/pipeline-example-backend:.*|zabunhub/pipeline-example-backend:${{ github.sha }}|" ./deployment/backend-deployment.yaml
+          # If you have a frontend deployment, uncomment and modify the next line
+          # sed -i "s|zabunhub/pipeline-example-frontend:.*|zabunhub/pipeline-example-frontend:${{ github.sha }}|" ./deployment/frontend-deployment.yaml
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ./deployment/backend-deployment.yaml
+          # Uncomment and correct the next line if needed
+          git add ./deployment/frontend-deployment.yaml
+          git commit -m "Update backend and frontend image to ${{ github.sha }}" || echo "No changes to commit"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+          git push origin HEAD:main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
