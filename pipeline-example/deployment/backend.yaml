@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: backend-container
-        image: zabunhub/celsius-to-fahrenheit-backend:610a48bdcf3f9f5962ff7f48dd752c13002be0ae  # Replace with your actual image
+        image: zabunhub/pipeline-example-backend:610a48bdcf3f9f5962ff7f48dd752c13002be0ae  # Replace with your actual image
         ports:
         - containerPort: 3000  # Adjust to your backend's listening port
         resources:

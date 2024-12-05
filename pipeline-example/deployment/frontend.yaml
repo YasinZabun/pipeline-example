@@ -14,8 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend-container
-        image: zabunhub/celsius-to-fahrenheit-frontend:610a48bdcf3f9f5962ff7f48dd752c13002be0ae  # Replace with your actual image
-        imagePullPolicy: IfNotPresent
+        image: zabunhub/pipeline-example-frontend:610a48bdcf3f9f5962ff7f48dd752c13002be0ae  # Replace with your actual image
         ports:
         - containerPort: 3000
       # Add any necessary environment variables or volume mounts here
