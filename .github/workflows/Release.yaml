@@ -59,11 +59,15 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull
+          git status
+          git branch -a
+          git checkout -b main origin/main
+          git pull origin main
           git add ./pipeline-example/deployment/backend.yaml
           # Uncomment and correct the next line if needed
           git add ./pipeline-example/deployment/frontend.yaml
           git commit -m "Update backend and frontend image to ${{ github.sha }}" || echo "No changes to commit"
+          git status
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
           git push origin HEAD:main
         env:
