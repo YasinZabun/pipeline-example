@@ -47,6 +47,7 @@ jobs:
       - name: Update Deployment YAML
         run: |
           pwd
+          ls
           sed -i "s|zabunhub/pipeline-example-backend:.*|zabunhub/pipeline-example-backend:${{ github.sha }}|" ./deployment/backend.yaml
           # If you have a frontend deployment, uncomment and modify the next line
           # sed -i "s|zabunhub/pipeline-example-frontend:.*|zabunhub/pipeline-example-frontend:${{ github.sha }}|" ./deployment/frontend.yaml
