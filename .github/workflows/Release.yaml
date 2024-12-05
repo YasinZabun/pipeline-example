@@ -59,6 +59,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull
           git add ./pipeline-example/deployment/backend.yaml
           # Uncomment and correct the next line if needed
           git add ./pipeline-example/deployment/frontend.yaml
