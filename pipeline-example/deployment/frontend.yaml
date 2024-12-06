@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend-container
-        image: zabunhub/pipeline-example-frontend:610a48bdcf3f9f5962ff7f48dd752c13002be0ae  # Replace with your actual image
+        image: zabunhub/pipeline-example-frontend:c21e3b166e0da736830ee41b692805c0a16fb4a4
         ports:
         - containerPort: 3000
       # Add any necessary environment variables or volume mounts here

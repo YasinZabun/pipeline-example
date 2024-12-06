@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: backend-container
-        image: zabunhub/pipeline-example-backend:0a2b09c871bdafd815d0169df112ad6eadc7bdc9
+        image: zabunhub/pipeline-example-backend:c21e3b166e0da736830ee41b692805c0a16fb4a4
         ports:
         - containerPort: 3000  # Adjust to your backend's listening port
         resources:
