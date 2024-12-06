@@ -53,8 +53,7 @@ jobs:
           pwd
           ls
           sed -i "s|zabunhub/pipeline-example-backend:.*|zabunhub/pipeline-example-backend:${{ github.sha }}|" ./pipeline-example/deployment/backend.yaml
-          # If you have a frontend deployment, uncomment and modify the next line
-          # sed -i "s|zabunhub/pipeline-example-frontend:.*|zabunhub/pipeline-example-frontend:${{ github.sha }}|" ./pipeline-example/deployment/frontend.yaml
+          sed -i "s|zabunhub/pipeline-example-frontend:.*|zabunhub/pipeline-example-frontend:${{ github.sha }}|" ./pipeline-example/deployment/frontend.yaml
 
       - name: Commit and Push Changes
         run: |
@@ -63,7 +62,6 @@ jobs:
           git checkout main
           git pull origin main
           git add ./pipeline-example/deployment/backend.yaml
-          # Uncomment and correct the next line if needed
           git add ./pipeline-example/deployment/frontend.yaml
           git commit -m "Update backend and frontend image to ${{ github.sha }}" || echo "No changes to commit"
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
